@@ -6,14 +6,16 @@
     
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsts/2.6.1/jsts.js"></script>
-    <title>Distance and Area Measurement</title>
+    <title>Polygon Split by a line</title>
   </head>
   <body>    
     <div class = "container">
         <div class = "toolbar">
-            <button id = "btn1" title = "Distance Measurement" geomtype = "LineString"></button>
-            <button id = "btn2" title = "Area Measurement" geomtype = "Polygon"></button>
+            <button id = "btn2" title = "Draw Polygon" geomtype = "Polygon"></button>
+            <button id = "btn1" title = "Split Polygon" geomtype = "LineString"></button>            
+            <button id = "btn4" title = "Move Feature"></button>
             <button id = "btn3" title = "Clear Graphics"></button>
+            
         </div>
         <div id="map" class="map">      
           <div id = "popup"></div>  
