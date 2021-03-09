@@ -220,7 +220,7 @@ class Snapping {
 
 
 //Create map and vector layer
-let map = new OLMap('map', 8, [-96.6345990807462, 32.81890764151014]).map;
+let map = new OLMap('map', 10, [-96.6345990807462, 32.81890764151014]).map;
 let vector_layer = new VectorLayer('Temp Layer', map).layer
 map.addLayer(vector_layer);
 
