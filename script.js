@@ -120,6 +120,10 @@ class Draw {
     }
 
     onGeomChange = (e) => {
+        /*
+            This function will dynamically split the polygon into two parts by a line and will follow geometry change event.
+        */
+        
         //Create jsts parser to read openlayers geometry
         let parser = new jsts.io.OL3Parser();
         
@@ -145,6 +149,7 @@ class Draw {
         //This will execute only if polygon is successfully splitted into two parts
         if(polygons.array.length == 2) {            
             
+            //Clear old splitted polygons and measurement ovelays
             this.vector_layer.getSource().clear();
             this.map.getOverlays().clear();              
             
