@@ -120,35 +120,47 @@ class Draw {
     }
 
     onGeomChange = (e) => {
+        //Create jsts parser to read openlayers geometry
         let parser = new jsts.io.OL3Parser();
         
+        //Creating line geometry from draw intraction
         let linestring = new ol.Feature({    
             geometry: new ol.geom.LineString(e.target.getCoordinates())
         });        
         
+        //Parse Polygon and Line geomtry to jsts type
         let a = parser.read(polygon.getGeometry())
         let b = parser.read(linestring.getGeometry())               
-                
+        
+        //Perform union of Polygon and Line and use Polygonizer to split the polygon by line
         let union = a.getExteriorRing().union(b);
-
         let polygonizer = new jsts.operation.polygonize.Polygonizer();
+        
+        //Splitting polygon in two part
         polygonizer.add(union);
-
+        
+        //Get splitted polygons
         let polygons = polygonizer.getPolygons();
-
+        
+        //This will execute only if polygon is successfully splitted into two parts
         if(polygons.array.length == 2) {            
+            
             this.vector_layer.getSource().clear();
-            this.map.getOverlays().clear();            
-            polygons.array.forEach((geom) => {                                
-                
+            this.map.getOverlays().clear();              
+            
+            polygons.array.forEach((geom) => {                                                
                 let splitted_polygon = new ol.Feature({    
                     geometry: new ol.geom.Polygon(parser.write(geom).getCoordinates())
                 });                
                 
+                //Add splitted polygon to vector layer    
                 this.vector_layer.getSource().addFeature(splitted_polygon);
+                
+                //Add area measurement overlay to splitted polygon
                 let overlay = new Overlay(this.map).overlay;
                 this.calArea(overlay, splitted_polygon.getGeometry().getFlatInteriorPoint(), splitted_polygon.getGeometry().getArea());
-
+                
+                //Add line measurement overlay to segment of polygon
                 let polyCoords = splitted_polygon.getGeometry().getCoordinates()[0];
                 polyCoords.forEach((coords, i) => {    
                     if(i < polyCoords.length-1){                        
@@ -158,13 +170,19 @@ class Draw {
                     }
                 });
             });
-
+            
+            //Change Style of Splitted polygons
             this.vector_layer.setStyle(highlightStyle);
         }
         else {
+            //Change style to normal if polgon is not splitted            
             this.vector_layer.setStyle(regularStyle);
+            
+            //Clear measurement overlays and splitted polygon if line is not completely intersected with polygon
             this.map.getOverlays().clear();
             this.vector_layer.getSource().clear();
+            
+            //Add original polygon to vector layer if no intersection is there between line and polygon
             this.vector_layer.getSource().addFeature(polygon)
         }
         
